@@ -183,6 +183,9 @@ async def background_task():
 
 ########### Start Bot ##########
 
+PORT = os.getenv("PORT", "8080")
+LOGS.info(f"Bot running on port {PORT}")
+
 LOGS.info("Bot has started.")
 with bot:
     bot.loop.run_until_complete(background_task())
