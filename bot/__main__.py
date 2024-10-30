@@ -17,7 +17,7 @@ except Exception as er:
 
 
 ####### GENERAL CMDS ########
-OWNER = 921365334
+
 
 @bot.on(events.NewMessage(pattern="/start"))
 async def _(e):
