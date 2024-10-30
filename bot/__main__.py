@@ -15,7 +15,7 @@ try:
 except Exception as er:
     LOGS.info(er)
 
-
+OWNER= 921365334
 ####### GENERAL CMDS ########
 
 @bot.on(events.NewMessage(pattern="/start"))
