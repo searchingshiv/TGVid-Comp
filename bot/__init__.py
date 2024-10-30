@@ -30,7 +30,6 @@ from .config import *
 LOG_FILE_NAME = "TGVid-Comp@Log.txt"
 
 
-
 # Clear the log file if it exists
 if os.path.exists(LOG_FILE_NAME):
     with open(LOG_FILE_NAME, "r+") as f_d:
@@ -69,20 +68,18 @@ app = FastAPI()
 async def root():
     return {"message": "Bot is running"}
 
-# Start both the bot and FastAPI server
-async def main():
+# Start the bot asynchronously
+async def start_bot():
     await bot.start()
-    LOGS.info("Bot is running...")
+    LOGS.info("Bot has started and is listening for commands...")
 
 if __name__ == "__main__":
     import uvicorn
 
-    # Start the bot in the background
-    asyncio.create_task(main())
+    # Start the bot in a background task
+    asyncio.run(start_bot())
 
-    # Get the host and port dynamically
-    host = os.getenv("HOST", "0.0.0.0")  # Default to '0.0.0.0' if HOST is not set
-    port = int(os.getenv("PORT", 8000))  # Default to 8000 if PORT is not set
-
-    # Start the dummy server to bind to a port
+    # Start the FastAPI server to bind to a port
+    host = os.getenv("HOST", "0.0.0.0")  # Default host to '0.0.0.0' if HOST not set
+    port = int(os.getenv("PORT", 8000))  # Default port to 8000 if PORT not set
     uvicorn.run(app, host=host, port=port)
