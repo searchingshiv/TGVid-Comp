@@ -3,6 +3,7 @@ python-decouple
 pyaesni
 psutil
 speedtest-cli
+telethon==1.24.0
 https://github.com/1Danish-00/Telethon/archive/master.zip
 html_telegraph_poster
 lxml_html_clean
