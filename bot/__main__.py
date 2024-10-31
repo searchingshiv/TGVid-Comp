@@ -11,14 +11,20 @@ import re
 from telethon import events, Button
 from datetime import datetime as dt
 from pathlib import Path
-
-# Initialize logging and start the bot
-LOGS.info("Starting...")
+from aiohttp import web
 
 try:
     bot.start(bot_token=BOT_TOKEN)
 except Exception as er:
     LOGS.info(f"Bot failed to start: {er}")
+
+####### HTTP SERVER ########
+
+async def handle(request):
+    return web.Response(text="Bot is running!")
+
+app = web.Application()
+app.router.add_get("/", handle)
 
 ####### GENERAL CMDS ########
 
@@ -181,12 +187,15 @@ async def background_task():
         except Exception as err:
             LOGS.info(f"Background task error: {err}")
 
-########### Start Bot ##########
+########### Start Bot and Server ##########
 
-PORT = os.getenv("PORT", "8080")
-LOGS.info(f"Bot running on port {PORT}")
+async def start_bot():
+    bot.start(bot_token=BOT_TOKEN)
+    LOGS.info("Bot has started.")
+    await background_task()
 
-LOGS.info("Bot has started.")
-with bot:
-    bot.loop.run_until_complete(background_task())
-    bot.loop.run_forever()
+if __name__ == "__main__":
+    PORT = os.getenv("PORT", "8080")
+    loop = asyncio.get_event_loop()
+    loop.create_task(start_bot())
+    web.run_app(app, port=int(PORT))
