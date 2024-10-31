@@ -25,6 +25,16 @@ for dir_name in ["downloads", "encode", "thumb"]:
     if not os.path.isdir(dir_name):
         os.mkdir(dir_name)
 
+def code(data):
+    OK.update({len(OK): data})
+    return str(len(OK) - 1)
+
+
+def decode(key):
+    if OK.get(int(key)):
+        return OK[int(key)]
+    return
+
 # Convert seconds to HH:MM:SS format
 def stdr(seconds: int) -> str:
     minutes, seconds = divmod(seconds, 60)
