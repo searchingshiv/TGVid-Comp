@@ -16,13 +16,39 @@ async def stats(e):
         ot = hbs(int(Path(out).stat().st_size))
         ov = hbs(int(Path(dl).stat().st_size))
         processing_file_name = dl.replace(f"downloads/", "").replace(f"_", " ")
-        ans = f"Processing Media:\n{processing_file_name}\n\nDownloaded:\n{ov}\n\nCompressed:\n{ot}"
-        await e.answer(ans, cache_time=0, alert=True)
+        
+        # Set an initial loop to update progress continuously
+        while True:
+            # Check if the download, compression, or upload is complete to break the loop
+            if os.path.exists(out):
+                compressed_size = int(Path(out).stat().st_size)
+                completion_status = f"Compressed: {hbs(compressed_size)}"
+            else:
+                compressed_size = 0
+                completion_status = "Compressing..."
+
+            downloaded_size = int(Path(dl).stat().st_size)
+            download_percentage = (downloaded_size / compressed_size) * 100 if compressed_size else 0
+            ans = (
+                f"Processing Media:\n{processing_file_name}\n\n"
+                f"Downloaded:\n{ov} ({download_percentage:.2f}%)\n\n"
+                f"{completion_status}"
+            )
+            await e.answer(ans, cache_time=0, alert=True)
+            
+            # Break the loop if all processing is complete
+            if compressed_size >= downloaded_size:
+                break
+            
+            # Pause to avoid overwhelming the UI with updates
+            await asyncio.sleep(2)
+
     except Exception as er:
         LOGS.info(er)
         await e.answer(
-            "Someting Went Wrong.\nSend Media Again.", cache_time=0, alert=True
+            "Something went wrong.\nPlease try sending the media again.", cache_time=0, alert=True
         )
+
 
 
 async def dl_link(event):
