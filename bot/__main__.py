@@ -13,13 +13,17 @@ from datetime import datetime as dt
 from pathlib import Path
 from aiohttp import web
 
-try:
-    bot.start(bot_token=BOT_TOKEN)
-except Exception as er:
-    LOGS.info(f"Bot failed to start: {er}")
+async def start_bot():
+    try:
+        await bot.start(bot_token=BOT_TOKEN)
+        LOGS.info("Bot has started.")
+    except Exception as er:
+        LOGS.info(f"Bot failed to start: {er}")
+
+    # Run the background task without blocking the main loop
+    asyncio.create_task(background_task())
 
 ####### HTTP SERVER ########
-
 async def handle(request):
     return web.Response(text="Bot is running!")
 
@@ -187,15 +191,16 @@ async def background_task():
         except Exception as err:
             LOGS.info(f"Background task error: {err}")
 
-########### Start Bot and Server ##########
+####### HTTP SERVER ########
+async def handle(request):
+    return web.Response(text="Bot is running!")
 
-async def start_bot():
-    bot.start(bot_token=BOT_TOKEN)
-    LOGS.info("Bot has started.")
-    await background_task()
+app = web.Application()
+app.router.add_get("/", handle)
 
+####### MAIN ########
 if __name__ == "__main__":
-    PORT = os.getenv("PORT", "8080")
+    PORT = int(os.getenv("PORT", "8080"))
     loop = asyncio.get_event_loop()
     loop.create_task(start_bot())
-    web.run_app(app, port=int(PORT))
+    web.run_app(app, port=PORT)
