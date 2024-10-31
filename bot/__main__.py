@@ -2,12 +2,20 @@
 #    Copyright (c) 2021 Danish_00
 #    Script Improved by Zylern
 
-
+import os
+import re
+import asyncio
+from aiohttp import web
+from pathlib import Path
+from telethon import Button, events
 from . import *
 from .config import *
 from .worker import *
 from .devtools import *
 from .FastTelethon import *
+from datetime import datetime as dt
+import time
+
 LOGS.info("Starting...")
 
 try:
@@ -18,105 +26,104 @@ except Exception as er:
 
 ####### GENERAL CMDS ########
 
-@bot.on(events.NewMessage(pattern="/start"))
+@bot.on(events.NewMessage(pattern=r"/start"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await start(e)
 
 
-@bot.on(events.NewMessage(pattern="/setcode"))
+@bot.on(events.NewMessage(pattern=r"/setcode"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await coding(e)
 
 
-@bot.on(events.NewMessage(pattern="/getcode"))
+@bot.on(events.NewMessage(pattern=r"/getcode"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await getcode(e)
 
 
-@bot.on(events.NewMessage(pattern="/showthumb"))
+@bot.on(events.NewMessage(pattern=r"/showthumb"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await getthumb(e)
 
 
-@bot.on(events.NewMessage(pattern="/logs"))
+@bot.on(events.NewMessage(pattern=r"/logs"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await getlogs(e)
 
 
-@bot.on(events.NewMessage(pattern="/cmds"))
+@bot.on(events.NewMessage(pattern=r"/cmds"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await zylern(e)
 
 
-@bot.on(events.NewMessage(pattern="/ping"))
+@bot.on(events.NewMessage(pattern=r"/ping"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await up(e)
 
 
-@bot.on(events.NewMessage(pattern="/sysinfo"))
+@bot.on(events.NewMessage(pattern=r"/sysinfo"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await sysinfo(e)
 
 
-@bot.on(events.NewMessage(pattern="/leech"))
+@bot.on(events.NewMessage(pattern=r"/leech"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await dl_link(e)
 
 
-@bot.on(events.NewMessage(pattern="/help"))
+@bot.on(events.NewMessage(pattern=r"/help"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await ihelp(e)
 
 
-@bot.on(events.NewMessage(pattern="/renew"))
+@bot.on(events.NewMessage(pattern=r"/renew"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await renew(e)
 
 
-@bot.on(events.NewMessage(pattern="/clear"))
+@bot.on(events.NewMessage(pattern=r"/clear"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await clearqueue(e)
 
 
-@bot.on(events.NewMessage(pattern="/speed"))
+@bot.on(events.NewMessage(pattern=r"/speed"))
 async def _(e):
-    if str(e.sender_id) not in OWNER and e.sender_id !=DEV:
-        return e.reply("**Sorry You're not An Authorised User!**")
+    if str(e.sender_id) not in OWNER and e.sender_id != DEV:
+        return await e.reply("**Sorry You're not An Authorised User!**")
     await test(e)
-    
-    
+
 
 ########## Direct ###########
 
-@bot.on(events.NewMessage(pattern="/eval"))
+@bot.on(events.NewMessage(pattern=r"/eval"))
 async def _(e):
     await eval(e)
 
-@bot.on(events.NewMessage(pattern="/bash"))
+@bot.on(events.NewMessage(pattern=r"/bash"))
 async def _(e):
     await bash(e)
 
@@ -135,17 +142,18 @@ async def _(e):
 async def _(e):
     await help(e)
 
+
 ########## AUTO ###########
 
 @bot.on(events.NewMessage(incoming=True))
 async def _(event):
-        if str(event.sender_id) not in OWNER and event.sender_id !=DEV:
-            return await event.reply_text("**Sorry You're not An Authorised User!**")
-        if not event.photo:
-            return
-        os.system("rm thumb.jpg")
-        await event.client.download_media(event.media, file="/bot/thumb.jpg")
-        await event.reply("**Thumbnail Saved Successfully.**")
+    if str(event.sender_id) not in OWNER and event.sender_id != DEV:
+        return await event.reply("**Sorry You're not An Authorised User!**")
+    if not event.photo:
+        return
+    os.system("rm thumb.jpg")
+    await event.client.download_media(event.media, file="/bot/thumb.jpg")
+    await event.reply("**Thumbnail Saved Successfully.**")
 
 
 @bot.on(events.NewMessage(incoming=True))
@@ -258,9 +266,23 @@ async def something():
             LOGS.info(err)
 
 
-########### Start ############
+# Web server to avoid Render's port error
+async def handle(request):
+    return web.Response(text="Bot is running.")
 
+app = web.Application()
+app.router.add_get("/", handle)
+port = int(os.environ.get("PORT", 5000))
+web_runner = web.AppRunner(app)
+
+async def start_web_server():
+    await web_runner.setup()
+    site = web.TCPSite(web_runner, '0.0.0.0', port)
+    await site.start()
+
+# Start the bot and web server together
 LOGS.info("Bot has started.")
 with bot:
+    bot.loop.run_until_complete(start_web_server())
     bot.loop.run_until_complete(something())
     bot.loop.run_forever()
